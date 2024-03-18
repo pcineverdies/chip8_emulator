@@ -37,3 +37,4 @@ When the emulator is running, press `p` to close it.
 ## Pictures
 
 ![](assets/brick.png)
+![](assets/maze.png)
