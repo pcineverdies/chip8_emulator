@@ -53,7 +53,7 @@ class chip8 {
   void instr_Annn_LD(uint16_t);
   void instr_Bnnn_JP(uint16_t);
   void instr_Cxkk_RND(uint8_t, uint8_t);
-  void instr_Dxyn_DRW(uint8_t, uint8_t, uint8_t);
+  void instr_Dxyn_DRW(uint8_t, uint8_t, uint8_t, Memory*, Memory*);
   void instr_Ex9E_SKP(uint8_t, uint16_t);
   void instr_ExA1_SKNP(uint8_t, uint16_t);
   void instr_Fx07_LD(uint8_t);

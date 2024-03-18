@@ -28,8 +28,10 @@ void chip8::step(Memory* mem, Memory* vmem, uint16_t key){
 
   // ========= execute stage
 
-  if      (IR_3 == 0x00 and IR_3 == 0xe0)  instr_00E0_CLS(vmem);
-  else if (IR_3 == 0x00 and IR_3 == 0xee)  instr_00EE_RET();
+  printf("Current instr: 0x%04x\n", this->IR);
+
+  if      (this->IR == 0x00e0)             instr_00E0_CLS(vmem);
+  else if (this->IR == 0x00ee)             instr_00EE_RET();
   else if (IR_3 == 0x01)                   instr_1nnn_JP(IR_012);
   else if (IR_3 == 0x02)                   instr_2nnn_CALL(IR_012);
   else if (IR_3 == 0x03)                   instr_3xkk_SE(IR_2, IR_01);
@@ -50,7 +52,7 @@ void chip8::step(Memory* mem, Memory* vmem, uint16_t key){
   else if (IR_3 == 0x0a)                   instr_Annn_LD(IR_012);
   else if (IR_3 == 0x0b)                   instr_Bnnn_JP(IR_012);
   else if (IR_3 == 0x0c)                   instr_Cxkk_RND(IR_2, IR_01);
-  else if (IR_3 == 0x0d)                   instr_Dxyn_DRW(IR_2, IR_1, IR_0);
+  else if (IR_3 == 0x0d)                   instr_Dxyn_DRW(IR_2, IR_1, IR_0, mem, vmem);
   else if (IR_3 == 0x0e and IR_01 == 0x9e) instr_Ex9E_SKP(IR_2, key);
   else if (IR_3 == 0x0e and IR_01 == 0xa1) instr_ExA1_SKNP(IR_2, key);
   else if (IR_3 == 0x0f and IR_01 == 0x07) instr_Fx07_LD(IR_2);
@@ -62,12 +64,12 @@ void chip8::step(Memory* mem, Memory* vmem, uint16_t key){
   else if (IR_3 == 0x0f and IR_01 == 0x33) instr_Fx33_LD(IR_2, mem);
   else if (IR_3 == 0x0f and IR_01 == 0x55) instr_Fx55_LD(IR_2, mem);
   else if (IR_3 == 0x0f and IR_01 == 0x65) instr_Fx65_LD(IR_2, mem);
-  else throw std::invalid_argument("Instruction received not valid");
+  else std::cout << "NVI\n"; // throw std::invalid_argument("Instruction received not valid");
 }
 
 // Reset frame buffer for memory
 void chip8::instr_00E0_CLS(Memory * vmem){
-  for(int i = 0; i < 32; i++) vmem[i] = 0;
+  for(int i = 0; i < 256; i++) vmem->write(i, 0);
 }
 
 // Return from subroutine
@@ -185,8 +187,30 @@ void chip8::instr_Cxkk_RND(uint8_t x, uint8_t kk){
 }
 
 // Draw on screen
-void chip8::instr_Dxyn_DRW(uint8_t x, uint8_t y, uint8_t n){
-  //TODO
+void chip8::instr_Dxyn_DRW(uint8_t x, uint8_t y, uint8_t n, Memory* mem, Memory* vmem){
+  uint8_t vx = this->regs[x];
+  uint8_t vy = this->regs[y];
+  uint8_t flag = 0;
+  uint16_t vmem_addr_bit = vy * 64 + vx;
+
+  for(int i = 0; i < n; i++){
+    uint8_t mem_data = mem->read(this->I + i);
+
+    for(int j = 0; j < 8; j++){
+      vmem_addr_bit = (vmem_addr_bit / 64 != vy) ? vmem_addr_bit - 64 : vmem_addr_bit;
+      uint16_t vmem_addr = vmem_addr_bit / 8;
+      uint8_t vmem_data_bit = vmem_addr_bit % 8;
+
+      uint8_t vmem_data = vmem->read(vmem_addr);
+
+      if(mem_data & (1 << j)){
+        if(vmem_data & (i << vmem_data_bit)) flag = 1;
+        vmem_data = (vmem_data ^ (1 << vmem_data_bit));
+      }
+
+      vmem_addr_bit++;
+    }
+  }
 }
 
 // Skip if key of Vx is pressed

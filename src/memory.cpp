@@ -155,3 +155,24 @@ void Memory::init_sprites(){
 uint32_t Memory::get_size(){
   return this->size;
 }
+
+void Memory::init_from_file(uint16_t init_addr, std::string file_name){
+  std::ifstream file;
+	size_t size = 0;
+
+	file.open(file_name, std::ios::in|std::ios::binary|std::ios::ate );
+  if(!file){
+    throw std::invalid_argument("File not opened correctly");
+  }
+
+  file.seekg(0, std::ios::end);
+	size = file.tellg() ;
+	file.seekg(0, std::ios::beg);
+
+	char* oData = new char[size];
+	file.read(oData, size);
+
+	for (size_t i = 0; i < size; i++ )
+    this->memory[i + init_addr] = oData[i];
+
+}
