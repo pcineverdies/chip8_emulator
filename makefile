@@ -5,21 +5,21 @@ SOURCE_FOLDER = src
 OUT_NAME = chip8_emulator
 
 emulator: main.o memory.o chip8.o keyboard.o display.o
-	g++ -o $(OUT_NAME) $(BUILD_FOLDER)/*.o $(X11_FLAGS) $(SDL2_FLAGS)
+	g++ -o $(BUILD_FOLDER)/$(OUT_NAME) $(BUILD_FOLDER)/*.o $(X11_FLAGS) $(SDL2_FLAGS)
 
-main.o: directories
+main.o:
 	g++ -c $(SOURCE_FOLDER)/main.cpp -o $(BUILD_FOLDER)/main.o
 
-display.o: directories
+display.o:
 	g++ -c $(SOURCE_FOLDER)/display.cpp $(X11_FLAGS) -o $(BUILD_FOLDER)/display.o $(SDL2_FLAGS)
 
-memory.o: directories
+memory.o:
 	g++ -c $(SOURCE_FOLDER)/memory.cpp -o $(BUILD_FOLDER)/memory.o
 
-chip8.o: directories
+chip8.o:
 	g++ -c $(SOURCE_FOLDER)/chip8.cpp -o $(BUILD_FOLDER)/chip8.o
 
-keyboard.o: directories
+keyboard.o:
 	g++ -c $(SOURCE_FOLDER)/keyboard.cpp $(X11_FLAGS) -o $(BUILD_FOLDER)/keyboard.o
 
 directories:
