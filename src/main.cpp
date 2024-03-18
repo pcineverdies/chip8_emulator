@@ -3,8 +3,13 @@
 #include "keyboard.h"
 #include "display.h"
 #include <unistd.h>
+#include <stdexcept>
 
 int main(int argc, char* argv[]){
+
+  if(argc != 2){
+    throw std::invalid_argument("Not enough arguments to run");
+  }
 
   chip8 cpu;
   Memory dmem(4096);
@@ -15,8 +20,9 @@ int main(int argc, char* argv[]){
 
   cpu.init();
   dmem.init_sprites();
-  dmem.init_from_file(0x200, "rom/brick.ch8");
+  dmem.init_from_file(0x200, argv[1]);
 
+  // Press p to terminate
   while(true){
     key_pressed = keyboard.read_key();
     if(key_pressed == 0xffff) break;
