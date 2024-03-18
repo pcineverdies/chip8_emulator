@@ -6,9 +6,9 @@
 #include "memory.h"
 #include <stdexcept>
 
-#define WINDOW_WIDTH 64
+#define WINDOW_WIDTH  64
 #define WINDOW_HEIGHT 32
-#define SCALE_FACTOR 8
+#define SCALE_FACTOR  8
 
 class Display_chip8{
   SDL_Event event;
@@ -16,9 +16,9 @@ class Display_chip8{
   SDL_Window *window;
 
 public:
-  Display_chip8();
-  void update(Memory*);
-  ~Display_chip8();
+        Display_chip8();
+  void  update(Memory*);
+        ~Display_chip8();
 };
 
 #endif // !__DISPLAY_H

@@ -1,5 +1,12 @@
 #include "keyboard.h"
 
+/** key_is_pressed
+    Check whether a key is pressed.
+    Uses the X11 protocol
+
+    @param ks KeySym identifier of a key
+    @return bool whether the key is pressed or not
+*/
 bool key_is_pressed(KeySym ks) {
     Display *dpy = XOpenDisplay(":0");
     char keys_return[32];
@@ -10,7 +17,19 @@ bool key_is_pressed(KeySym ks) {
     return isPressed;
 }
 
+/** Keyboard::read_key
+    Return which key is pressed using the following matching
 
+    1 2 3 4 -> 1 2 3 a
+    q w e r    4 5 6 b
+    a s d f    7 8 9 c
+    z x c v    d 0 e f
+
+    If the key x is pressed, then the xth bit of the result is set.
+    If the key p is pressed, the result is 0xffff
+
+    @return uint16_t mask with the pressed keys
+*/
 uint16_t Keyboard::read_key(){
 
   // Set bit nth of res if nth key is pressed
@@ -28,11 +47,12 @@ uint16_t Keyboard::read_key(){
   if(key_is_pressed(XK_A)) res |= (1 << 0x07); //7
   if(key_is_pressed(XK_S)) res |= (1 << 0x08); //8
   if(key_is_pressed(XK_D)) res |= (1 << 0x09); //9
-  if(key_is_pressed(XK_G)) res |= (1 << 0x0e); //e
+  if(key_is_pressed(XK_F)) res |= (1 << 0x0e); //e
   if(key_is_pressed(XK_Z)) res |= (1 << 0x0a); //a
   if(key_is_pressed(XK_X)) res |= (1 << 0x00); //0
   if(key_is_pressed(XK_C)) res |= (1 << 0x0b); //b
   if(key_is_pressed(XK_V)) res |= (1 << 0x0f); //f
+  if(key_is_pressed(XK_P)) res = 0xffff;
 
   return res;
 

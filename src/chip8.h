@@ -14,9 +14,6 @@ class chip8 {
   // Index Register
   uint16_t I;
 
-  // Instruction Register
-  uint16_t IR;
-
   // Program Counter
   uint16_t PC;
 
@@ -24,7 +21,7 @@ class chip8 {
   uint8_t SP;
 
   // Stack
-  uint8_t stack[64];
+  uint16_t stack[64];
 
   // Timers
   uint8_t DT;

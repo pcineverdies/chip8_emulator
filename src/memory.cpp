@@ -1,5 +1,11 @@
 #include "memory.h"
 
+/** Memory::read
+    Read by from memory at a given address
+
+    @param addr uint16_t address to read
+    @return uint8_t read byte
+*/
 uint8_t Memory::read(uint16_t addr){
   if(addr >= 4096)
     throw std::invalid_argument( "Address cannot be >= 4096" );
@@ -7,6 +13,12 @@ uint8_t Memory::read(uint16_t addr){
   return this->memory[addr];
 }
 
+/** Memory::write
+    Write a byte in memory at a given address
+
+    @param addr uint16_t address to use
+    @param data uint8_t  byte to write
+*/
 void Memory::write(uint16_t addr, uint8_t data){
   if(addr >= 4096)
     throw std::invalid_argument( "Address cannot be >= 4096" );
@@ -14,12 +26,24 @@ void Memory::write(uint16_t addr, uint8_t data){
   this->memory[addr] = data;
 }
 
+/** Memory::Memory
+    Memory constructor
+
+    @param size uint8_t  number of bytes in the memory
+*/
 Memory::Memory(uint32_t size){
   this->size = size;
   this->memory.resize(size);
   for(int i = 0; i < size; i++) this->memory[i] = 0;
 }
 
+/** Memory::write_instruction
+    Write an instruction in memory at a given address, msb first.
+    The address must be even.
+
+    @param addr uint16_t address to use
+    @param data uint16_t data to write
+*/
 void Memory::write_instruction(uint16_t addr, uint16_t data){
 
   if(addr & 1) {
@@ -33,6 +57,11 @@ void Memory::write_instruction(uint16_t addr, uint16_t data){
   this->memory[addr + 1] = lsb;
 }
 
+/** Memory::init_sprites
+    Initialize the first 80 bytes of a memory with the sprites of the
+    characters from 0 to F.
+
+*/
 void Memory::init_sprites(){
 
   if(this->size < 0x4f){
@@ -152,26 +181,45 @@ void Memory::init_sprites(){
   this->memory[0x4f] = 0x80;
 }
 
+/** Memory::get_size
+    Return the size of the memory
+
+    @return uint32_t Size of the memory
+*/
 uint32_t Memory::get_size(){
   return this->size;
 }
 
+/** Memory::init_from_file
+    Initialize memory from a file
+
+    @param  init_addr uint16_t first address to use
+    @param  file_name string name of the file to use
+*/
 void Memory::init_from_file(uint16_t init_addr, std::string file_name){
+
+  // Stream for the input file
   std::ifstream file;
 	size_t size = 0;
 
+  // Open file
 	file.open(file_name, std::ios::in|std::ios::binary|std::ios::ate );
   if(!file){
     throw std::invalid_argument("File not opened correctly");
   }
 
+  // Get the number of bytes in the file
   file.seekg(0, std::ios::end);
-	size = file.tellg() ;
+  size = file.tellg() ;
+
+  // Put the file pointer at the beginning of it
 	file.seekg(0, std::ios::beg);
 
+  // Read the whole file in the buffer
 	char* oData = new char[size];
 	file.read(oData, size);
 
+  // Initialize the memroy
 	for (size_t i = 0; i < size; i++ )
     this->memory[i + init_addr] = oData[i];
 
