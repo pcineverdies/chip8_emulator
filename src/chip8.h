@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include "memory.h"
+#include <ctime>
+#include <cstdlib>
 
 class chip8 {
 

@@ -10,8 +10,11 @@ bool key_is_pressed(KeySym ks) {
     return isPressed;
 }
 
+
 uint16_t Keyboard::read_key(){
 
+  // Set bit nth of res if nth key is pressed
+  // (in this way more than one key can be pressed at a time)
   uint16_t res = 0;
 
   if(key_is_pressed(XK_1)) res |= (1 << 0x01); //1
@@ -25,7 +28,7 @@ uint16_t Keyboard::read_key(){
   if(key_is_pressed(XK_A)) res |= (1 << 0x07); //7
   if(key_is_pressed(XK_S)) res |= (1 << 0x08); //8
   if(key_is_pressed(XK_D)) res |= (1 << 0x09); //9
-  if(key_is_pressed(XK_F)) res |= (1 << 0x0e); //e
+  if(key_is_pressed(XK_G)) res |= (1 << 0x0e); //e
   if(key_is_pressed(XK_Z)) res |= (1 << 0x0a); //a
   if(key_is_pressed(XK_X)) res |= (1 << 0x00); //0
   if(key_is_pressed(XK_C)) res |= (1 << 0x0b); //b

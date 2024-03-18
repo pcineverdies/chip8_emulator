@@ -15,6 +15,7 @@ public:
   void write(uint16_t addr, uint8_t data);
   void write_instruction(uint16_t add, uint16_t data);
   void init_sprites();
+  uint32_t get_size();
 };
 
 #endif // !__MEMORY_H

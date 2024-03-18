@@ -15,6 +15,7 @@ void Memory::write(uint16_t addr, uint8_t data){
 }
 
 Memory::Memory(uint32_t size){
+  this->size = size;
   this->memory.resize(size);
   for(int i = 0; i < size; i++) this->memory[i] = 0;
 }
@@ -149,4 +150,8 @@ void Memory::init_sprites(){
   this->memory[0x4d] = 0xf0;
   this->memory[0x4e] = 0x80;
   this->memory[0x4f] = 0x80;
+}
+
+uint32_t Memory::get_size(){
+  return this->size;
 }
